@@ -10,7 +10,6 @@ public enum Answer {
     RATHER_NO("Raczej nie");
 
     private final String displayText;
-    private static final Map<String, Answer> map = new HashMap<>();
     // tablica["costam"] = Answer.NO
     // mapa.put("costam", Answer.NO);
     // "costam" => Answer.NO
@@ -26,17 +25,6 @@ public enum Answer {
         return displayText;
     }
 
-    static {
-        for (Answer answer : Answer.values()) {
-            map.put(answer.displayText, answer);
-        }
-        /*
-          "Tak" -> YES
-          "Nie" -> NO
-          "Raczej tak" -> RATHER_YES
-          "Raczej nie" -> RATHER_NO
-         */
-    }
 
     @Override
     public String toString(){
@@ -44,7 +32,13 @@ public enum Answer {
     }
 
     public static Answer valueOfDisplayText(String displayText) {
-        return map.get(capitalize(displayText));
+        String capitalizedDisplayText = capitalize(displayText);
+        for (Answer answer : Answer.values()) {
+            if(answer.getDisplayText().equals(capitalizedDisplayText)) {
+                return answer;
+            }
+        }
+        return null;
     }
 
     private static String capitalize(String str){
