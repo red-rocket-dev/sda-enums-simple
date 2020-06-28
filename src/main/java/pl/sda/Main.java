@@ -1,7 +1,11 @@
 package pl.sda;
-
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 import java.util.Scanner;
-
 public class Main {
     /* Cel - napisanie prostej ankiety z zapisem do pliku.
      * Pytania są zawsze takie same (takie jak przygotowane w main), odpowiedź to może być tylko: tak, nie, raczej nie lub raczej tak
@@ -29,23 +33,64 @@ public class Main {
      * Uruchom aplikację.
      * Co się stało? Czy są wady takiego podejścia?
      */
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
+        BufferedReader bufferedReader = Files.newBufferedReader(Path.of("asasas"));
+        while(bufferedReader.ready()) {
+            System.out.println(bufferedReader.readLine());
+        }
+        bufferedReader.close();
 
         Scanner scanner = new Scanner(System.in);
         printMenu();
         String modeChoice = scanner.nextLine();
+        String answerChoice;
+        Answer answer;
+        StringBuilder answerLineBuilder = new StringBuilder();
         if ("1".equals(modeChoice)) {
             System.out.println("Czy makaron jest Twoim ulubionym daniem?");
+            //TODO: przeniesc powtarzajacy sie kod do metody
+            printAnswers();
+            answerChoice = scanner.nextLine();
+            answer = Answer.valueOf(answerChoice);
+            answerLineBuilder.append(answer)
+                    .append(";");
             System.out.println("Czy pogoda ostatnio była ładna?");
+            printAnswers();
+            answerChoice = scanner.nextLine();
+            answer = Answer.valueOf(answerChoice);
+            answerLineBuilder.append(answer)
+                    .append(";");
             System.out.println("Czy ostry jest cień mgły?");
+            printAnswers();
+            answerChoice = scanner.nextLine();
+            answer = Answer.valueOf(answerChoice);
+            answerLineBuilder.append(answer)
+                    .append("\n");
+            Files.writeString(Path.of("odpowiedzi.txt"), answerLineBuilder + "\n", StandardOpenOption.CREATE, StandardOpenOption.APPEND);
         } else {
-            //tutaj tryb wynikow
+            File text = new File("C:\\Users\\user\\Desktop\\sda-challenge-game-maps\\plik.txt");
+            scanner = new Scanner(text);
+            while (scanner.hasNextLine()) {
+                String line = scanner.nextLine();
+                String[] answersAsStrings = line.split(":");
+                Answer[] answersAsEnumsElements = new Answer[answersAsStrings.length];
+                for (int i=0; i <answersAsStrings.length; i++) {
+                    answersAsEnumsElements[i] = Answer.valueOf(answersAsStrings[i]);
+                }
+                for (Answer answer1 : answersAsEnumsElements) {
+                }
+            }
         }
-
     }
-
     private static void printMenu() {
         System.out.println("1. Tryb ankiety");
         System.out.println("2. Tryb wyników");
+    }
+
+    //TODO:
+    private static void printAnswers() {
+        for (Answer answer : Answer.values()) {
+            System.out.println(answer.name());
+        }
     }
 }
